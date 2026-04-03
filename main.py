@@ -105,13 +105,9 @@ print(f'Total absolute area estimate: {final_area}')
 # ------------------------------------------------------------
 x = np.linspace(lower_bound, upper_bound, 400)
 y = f(x)
-
 plt.plot(x, y, label=f"f(x) = {formula}")
 plt.grid(True)
-
 for x_left, h in zip(left_edges, heights):
-    plt.bar(x_left, h, width=width, align='edge',
-            alpha=0.3, edgecolor='black', color='orange')
-
+    plt.bar(x_left, h, width=width, align='edge',alpha=0.3, edgecolor='black', color='orange')
 plt.legend()
 plt.show()
