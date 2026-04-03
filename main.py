@@ -24,20 +24,27 @@ x = np.linspace(lower_bound, upper_bound, 400)
 y = get_function(formula)(x)
 
 # rectangles
+# compute left edges ONCE
 width = (upper_bound - lower_bound) / rectangles
+left_edges = np.linspace(lower_bound, upper_bound - width, rectangles)
+
+# compute sample points (your existing logic)
 if method == "left":
-    x_values = np.linspace(lower_bound, upper_bound - width, rectangles)
-elif method == 'right':
-    x_values = np.linspace(lower_bound + width, upper_bound, rectangles)
-elif method == 'midpoint':
-    x_values = np.linspace(lower_bound + width/2, upper_bound - width/2, rectangles)
+    sample_x = left_edges
+elif method == "right":
+    sample_x = left_edges + width
+elif method == "midpoint":
+    sample_x = left_edges + width/2
 f = get_function(formula)
-heights = f(x_values)
+heights = f(sample_x)
 
-for x_val, height_val in zip(x_values, heights):
-    plt.bar(x_val, height_val, width=width, align='center', alpha=0.3, edgecolor='black')
+# ⭐ DRAW rectangles from left_edges, not sample_x
+for x_left, h in zip(left_edges, heights):
+    plt.bar(x_left, h, width=width, align='edge',
+            alpha=0.3, edgecolor='black')
 
-final_estimate = np.sum(heights * width)
+
+final_estimate = np.sum(np.abs(heights * width))
 print(final_estimate)
 
 # final graphing
