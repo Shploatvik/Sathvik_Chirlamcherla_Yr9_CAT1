@@ -27,8 +27,8 @@ def get_function(formula):
 # or an invalid method name. Each check gives a clear message.
 # ------------------------------------------------------------
 try:
-    lower_bound = float(input("Enter the lower bound of x: "))
-    upper_bound = float(input("Enter the upper bound of x: "))
+    lower_bound = int(input("Enter the lower bound of x: "))
+    upper_bound = int(input("Enter the upper bound of x: "))
     if upper_bound <= lower_bound:
         raise ValueError("Upper bound must be greater than lower bound.")
     
@@ -46,7 +46,6 @@ try:
 
 except ValueError as e:
     print("Input error:", e)
-    exit()
 # ------------------------------------------------------------
 # FUNCTION EVALUATION
 # We now convert the formula string into a real function f(x).
@@ -59,7 +58,7 @@ try:
     f(0)
 except Exception:
     print("Your formula is invalid. Please check your syntax.")
-    exit()
+    formula = input("Enter the formula (must contain x): ").lower()
 # ------------------------------------------------------------
 # RECTANGLE SETUP
 # width: the width of each rectangle
