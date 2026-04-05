@@ -4,18 +4,21 @@ import numpy as np
 
 fig = plt.figure(figsize=(10, 6))
 
+# PAGE 1 (bottom layer)
 page1 = plt.axes([0,0,1,1])
 page1.set_facecolor('lightgoldenrodyellow')
- # Start with page2 hidden
-page2 = fig.add_subplot(111)
-page2.set_visible(False) 
-page2_bg = plt.axes([0, 0, 1, 1])
+
+# PAGE 2 BACKGROUND (middle layer, full screen)
+page2_bg = plt.axes([0,0,1,1])
 page2_bg.set_facecolor("peachpuff")
 page2_bg.set_visible(False)
-page2 = fig.add_subplot(111)
-page2.set_visible(False) 
 page2_bg.set_xticks([])
 page2_bg.set_yticks([])
+page2_bg.set_frame_on(False)   # <-- IMPORTANT
+
+# PAGE 2 GRAPH (top layer, normal subplot)
+page2 = fig.add_subplot(111)
+page2.set_visible(False)
 
 button_enabled = False
 # functions to switch between pages
