@@ -19,25 +19,27 @@ page2_bg.set_frame_on(False)   # <-- IMPORTANT
 # PAGE 2 GRAPH (top layer, normal subplot)
 page2 = fig.add_subplot(111)
 page2.set_visible(False)
-
-button_enabled = False
-# functions to switch between pages
-def show_page1():
-    page1.set_visible(True)
-    page2.set_visible(False)
-    page2_bg.set_visible(False)
-    fig.canvas.draw_idle()
-
+# create the back button once (keep a reference so it isn't garbage collected)
 back_ax = page2_bg.inset_axes([0.02, 0.9, 0.15, 0.07])
 back_button = Button(back_ax, "Back")
-back_button.on_clicked(lambda *args: show_page1())
 
+back_ax.set_visible(False)   # hide until page2 is shown
+# ...existing code...
+button_enabled = False
+# functions to switch between pages
+def show_page1(*args):
+    page1.set_visible(True)
+    page2.set_visible(False)
+    back_ax.set_visible(False)    # hide stored back button
+    page2_bg.set_visible(False)
+    fig.canvas.draw_idle()
+back_button.on_clicked(show_page1)
 def show_page2(*args):
     if button_enabled:
         page1.set_visible(False)
         page2_bg.set_visible(True)
         page2.set_visible(True)
-        
+        back_ax.set_visible(True)   # show stored back button
         lower = float(lower_box.text)
         upper = float(upper_box.text)
         rects = int(rects_box.text)
@@ -46,6 +48,7 @@ def show_page2(*args):
         f = get_function(formula)
         page2_setup(lower, upper, rects, formula, method,f)
         fig.canvas.draw_idle()
+
 
 # the def functions to validate all the input
 def is_float(s):
@@ -150,6 +153,7 @@ graph.on_clicked(show_page2)  # Placeholder for actual graphing function
 # left_edges: where each rectangle STARTS on the x-axis
 # sample_x: where we evaluate the function for height
 # ------------------------------------------------------------
+
 def page2_setup(lower_bound, upper_bound, rectangles, formula, method,f):
     page2.clear()
     width = (upper_bound - lower_bound) / rectangles
