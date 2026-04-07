@@ -60,7 +60,7 @@ def show_page2(*args):
 
         page2_setup(lower, upper, rects, formula, method, f)
         fig.canvas.draw_idle()
-
+#pygame visualisation of rectangles based on the height of the rectangles.
 def show_pygame_rectangles(left_edges, heights, width, font_path=None):
     pygame.init()
     screen = pygame.display.set_mode((900, 600))
@@ -139,7 +139,7 @@ def show_pygame_rectangles(left_edges, heights, width, font_path=None):
             # Text (only if not too many)
             if rectangles <= 40:
                 text_str = (
-                    f"Rect {i+1} | x={x_left:.4f} | w={width:.4f} | "
+                    f"Rect {i+1} | x={x_left:.4f} to {x_left + width:.4f} | w={width:.4f} | "
                     f"h={h:.4f} | area={area:.4f}"
                 )
                 text = font.render(text_str, True, (20, 20, 20))
@@ -191,16 +191,32 @@ def validate_inputs(*args):
     rect  = rects_box.text
     formula = formula_box.text
     method  = method_box.text
+    message = ""
+    if not is_float(lower):
+        message = "Lower bound must be a number."
+    elif not is_float(upper):
+        message = "Upper bound must be a number."
+    elif float(upper) <= float(lower):
+        message = "Upper bound must be greater than lower bound."
+    elif not is_int(rect):
+        message = "Number of rectangles must be an integer."
+    elif int(rect) <= 0:
+        message = "Number of rectangles must be positive."
+    elif "x" not in formula:
+        message = "Formula must contain the variable 'x'."
+    elif method.lower() not in ["left", "right", "midpoint"]:
+        message = "Method must be one of: left, right, midpoint."
 
-    if valid_input(lower, upper, rect, formula, method):
+    if message == "":
         button_enabled = True
         graph.color = "palegreen"
         graph.hovercolor = "mediumseagreen"
+        error_text.set_text("")
     else:
         button_enabled = False
         graph.color = "lightcoral"
         graph.hovercolor = "indianred"
-
+        error_text.set_text(message)
     fig.canvas.draw_idle()
 
 
@@ -222,32 +238,37 @@ def get_function(formula):
 # ------------------------------------------------------------
 # PAGE 1 INPUTS
 # ------------------------------------------------------------
-lower_bound_val = page1.inset_axes([0.1, 0.8, 0.3, 0.1])
+lower_bound_val = page1.inset_axes([0.5, 0.8, 0.3, 0.1])
 lower_box = TextBox(lower_bound_val, "Lower bound:")
 lower_box.on_text_change(validate_inputs)
 
-upper_bound_val = page1.inset_axes([0.1, 0.65, 0.3, 0.1])
+upper_bound_val = page1.inset_axes([0.5, 0.65, 0.3, 0.1])
 upper_box = TextBox(upper_bound_val, "Upper bound:")
 upper_box.on_text_change(validate_inputs)
 
-rectangle_amt = page1.inset_axes([0.1, 0.5, 0.3, 0.1])
+rectangle_amt = page1.inset_axes([0.5, 0.5, 0.3, 0.1])
 rects_box = TextBox(rectangle_amt, "Rectangles:")
 rects_box.on_text_change(validate_inputs)
 
-formula_input = page1.inset_axes([0.1, 0.35, 0.3, 0.1])
-formula_box = TextBox(formula_input, "Formula:")
+formula_input = page1.inset_axes([0.5, 0.35, 0.3, 0.1])
+formula_box = TextBox(formula_input, "Formula: (use 'x' as variable, e.g. 'x^2 + 3')")
 formula_box.on_text_change(validate_inputs)
 
-ax_method = page1.inset_axes([0.1, 0.2, 0.3, 0.1])
-method_box = TextBox(ax_method, "Method:")
+ax_method = page1.inset_axes([0.5, 0.2, 0.3, 0.1])
+method_box = TextBox(ax_method, "Method: (left, right, midpoint)")
 method_box.on_text_change(validate_inputs)
 
 # --- DRAW GRAPH BUTTON (store its axes so we can hide/show it) ---
-graph_ax = page1.inset_axes([0.1, 0.05, 0.3, 0.1])
+graph_ax = page1.inset_axes([0.5, 0.05, 0.3, 0.1])
 graph = Button(graph_ax, 'Draw Graph')
 graph.on_clicked(show_page2)
 
+error_ax = page1.inset_axes([0.2, 0.05, 0.5, 0.1])
+error_ax.set_xticks([])
+error_ax.set_yticks([])
+error_ax.set_frame_on(False)
 
+error_text = error_ax.text(0.02, 0.5, "", fontsize=12, color="red", va="center")
 # ------------------------------------------------------------
 # PAGE 2 GRAPHING
 # ------------------------------------------------------------
