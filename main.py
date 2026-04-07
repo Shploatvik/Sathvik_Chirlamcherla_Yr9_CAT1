@@ -258,7 +258,6 @@ error_ax.set_yticks([])
 error_ax.set_frame_on(False) # this is the text box for error messages on page 1 - it just sets up the axes and stuff
 
 error_text = error_ax.text(0.02, 0.5, "", fontsize=12, color="red", va="center") # this sets the font colour, alignment, size and position.
-
 # PAGE 2 GRAPHING
 def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this sets up the page 2 based on the inputs. 
     page2.clear() # clears anything from page 2 so that it can be redrawn with the new inputs
