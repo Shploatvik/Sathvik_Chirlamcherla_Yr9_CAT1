@@ -2,6 +2,41 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import TextBox, Button
 import numpy as np
 import pygame
+
+
+def autocorrect_formula(formula):
+    f = formula.replace(" ", "") # replaces "" with multiply for things like 8x
+    f = f.replace("^", "**")
+
+    # Insert * between number and x (2x → 2*x)
+    corrected = ""
+    for i in range(len(f)):
+        if i > 0 and f[i] == "x" and f[i-1].isdigit():
+            corrected += "*x" # goes through the formula and if like there is stuff like 8x it puts a * in front of x.
+        else:
+            corrected += f[i]
+    f = corrected # otherwise its jsut left as is
+
+    # Insert * between number and functions (2sin(x) → 2*sin(x))
+    funcs = ["sin", "cos", "sqrt"]
+    for fn in funcs: # it does the same for functions too. 
+        for d in "0123456789)":
+            f = f.replace(d + fn, d + "*" + fn)
+
+    # Fix accidental **x
+    f = f.replace("**x", "*x") 
+
+    return f
+
+def formula_is_complete(formula):
+    bad_endings = ("+", "-", "*", "/", "**", "(", "sin", "cos", "sqrt")
+    f = formula.strip()
+    return not any(f.endswith(b) for b in bad_endings)
+# if it ends in an operator
+# ------------------------------------------------------------
+# YOUR ORIGINAL CODE STARTS HERE
+# ------------------------------------------------------------
+
 #stting the size of the window and creating the different layers for the pages.
 fig = plt.figure(figsize=(10, 6))
 
@@ -54,6 +89,7 @@ def show_page2(*args):
 
         page2_setup(lower, upper, rects, formula, method, f) # it sets up page 2 with all the inputs from page one
         fig.canvas.draw_idle()
+
 #pygame visualisation of rectangles based on the height of the rectangles.
 def show_pygame_rectangles(left_edges, heights, width, font_path=None):
     pygame.init() # starts pygame
@@ -197,8 +233,10 @@ def validate_inputs(*args):
     elif int(rect) <= 0:
         message = "Number of rectangles must be positive."
     elif "x" not in formula:                      # then the graph can be drawn
-        message = "Formula must contain the variable 'x'."
-    elif method.lower() not in ["left", "right", "midpoint"]:
+        message = "Formula must contain the variable 'x'." 
+    elif not formula_is_complete(formula): # thsi makes sure that the formula does not end in some operators 
+        message = "Formula is incomplete — finish the expression."
+    elif method.lower() not in ["left", "right", "midpoint"]: # only accepts these inputs
         message = "Method must be one of: left, right, midpoint."
 
     if message == "": # if the message is empty, then there are no errors, and the button allows you to go to page 2
@@ -212,9 +250,10 @@ def validate_inputs(*args):
         graph.hovercolor = "indianred" #when hovered on it turns induan red
         error_text.set_text(message) #it sends the message to teh error text box on page 1
     fig.canvas.draw_idle()
+
 # this builds safe functions from the formula inoput
 def get_function(formula):
-    formula = formula.replace("^", "**") # replaces ^ with ** which is num py math for to teh power of.
+    formula = autocorrect_formula(formula)   ### >>> ADDED
     allowed = {
         "sin": np.sin,
         "cos": np.cos,
@@ -257,18 +296,20 @@ error_ax.set_yticks([])
 error_ax.set_frame_on(False) # this is the text box for error messages on page 1 - it just sets up the axes and stuff
 
 error_text = error_ax.text(0.02, 0.5, "", fontsize=12, color="red", va="center") # this sets the font colour, alignment, size and position.
+
 # PAGE 2 GRAPHING
 def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this sets up the page 2 based on the inputs. 
     page2.clear() # clears anything from page 2 so that it can be redrawn with the new inputs
-    page2_bg.set_facecolor("peachpuff") 
+    page2_bg.set_facecolor("peachpuff") # sets the bg colour after clearing the bckground
+
     width = (upper_bound - lower_bound) / rectangles # this is the width of each rectangle, total width / rectangles. 
     left_edges = np.linspace(lower_bound, upper_bound - width, rectangles) # this is the x value of the left edge of each rectangle, which is an array of values from lower bound to upper bound minus width, with the number of rectangles.
     page2.set_title(f"Estimated Area for - f(x) = {formula} & Method: {method.title()}") # sets teh title of the graph based on the formula and teh method
     if method == "left" or method == "l": # if the method is left, then the x value used to calculate the height of the rectangle is the left edge of the rectangle
         sample_x = left_edges
-    elif method == "right": # if teh method is right, it uses the right edge of hte rectangle to calculate the height - left + width
+    elif method == "right" or method == 'r': # if teh method is right, it uses the right edge of hte rectangle to calculate the height - left + width
         sample_x = left_edges + width
-    elif method == "midpoint": # if the method is midpoint, it uses the middle of the rectangle to caluclate the height which is left +1/2width
+    elif method == "midpoint" or method == 'mid': # if the method is midpoint, it uses the middle of the rectangle to caluclate the height which is left +1/2width
         sample_x = left_edges + width / 2
 
     heights = f(sample_x) # this calculates the heights of the rectangles by plugging in the sample x values into the function f, which is the formula that the user inputted.
@@ -298,3 +339,4 @@ def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this
     show_pygame_rectangles(left_edges, heights, width) # it shows the pygame visualisation of the rectangles based on the heights and stuff
 
 plt.show() # shows the whole thing. 
+    
