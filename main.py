@@ -10,7 +10,6 @@ page1 = plt.axes([0,0,1,1])
 page1.set_facecolor('lightgoldenrodyellow')
 # PAGE 2 BACKGROUND (middle layer, full screen)
 page2_bg = plt.axes([0,0,1,1]) # full screen background for page 2
-page2_bg.set_facecolor("peachpuff") # light background for page 2
 page2_bg.set_visible(False) #makes it invisible until we switch to page 2
 page2_bg.set_xticks([])
 page2_bg.set_yticks([])
@@ -261,7 +260,7 @@ error_text = error_ax.text(0.02, 0.5, "", fontsize=12, color="red", va="center")
 # PAGE 2 GRAPHING
 def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this sets up the page 2 based on the inputs. 
     page2.clear() # clears anything from page 2 so that it can be redrawn with the new inputs
-
+    page2_bg.set_facecolor("peachpuff") 
     width = (upper_bound - lower_bound) / rectangles # this is the width of each rectangle, total width / rectangles. 
     left_edges = np.linspace(lower_bound, upper_bound - width, rectangles) # this is the x value of the left edge of each rectangle, which is an array of values from lower bound to upper bound minus width, with the number of rectangles.
     page2.set_title(f"Estimated Area for - f(x) = {formula} & Method: {method.title()}") # sets teh title of the graph based on the formula and teh method
