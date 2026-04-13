@@ -94,13 +94,11 @@ def show_page2(*args):
 def show_pygame_rectangles(left_edges, heights, width, font_path=None):
     pygame.init() # starts pygame
     screen = pygame.display.set_mode((900, 600)) # sets the size of the window
-    pygame.display.set_caption("Rectangle Results") # we give it a title to the window
+    pygame.display.set_caption("Rectangle Results") # we give the windo a title
 
     # Load custom font or fallback
-    try:
-        font = pygame.font.Font("Saira_Stencil/SairaStencil-VariableFont_wdth,wght.ttf", 20) # i downloaded this
-    except:
-        font = pygame.font.SysFont("arial", 20)
+    font = pygame.font.Font("Saira_Stencil/static/SairaStencil_Condensed-SemiBold.ttf", 20) # i downloaded this
+    font1 = pygame.font.Font("Saira_Stencil/static/SairaStencil_Condensed-Regular.ttf",20)
     rectangles = len(left_edges) # the number of rectangles is the length of the left edges array
     areas = np.abs(heights * width) # this is the absolute area of each rectangle, which is the height times the width. 
 
@@ -133,7 +131,7 @@ def show_pygame_rectangles(left_edges, heights, width, font_path=None):
 
         screen.fill((245, 245, 245)) #its the colour og the screen
 
-        title = font.render("Rectangle Results", True, (40, 40, 40))# its the titke of the page
+        title = font1.render("Rectangle Results", True, (40, 40, 40))# its the titke of the page
         screen.blit(title, (BAR_X, 10)) 
 
         for i, (x_left, h, area) in enumerate(zip(left_edges, heights, areas)):
