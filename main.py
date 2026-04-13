@@ -22,10 +22,6 @@ def autocorrect_formula(formula):
     for fn in funcs: # it does the same for functions too. 
         for d in "0123456789)":
             f = f.replace(d + fn, d + "*" + fn)
-
-    # Fix accidental **x
-    f = f.replace("**x", "*x") 
-
     return f
 
 def formula_is_complete(formula):
