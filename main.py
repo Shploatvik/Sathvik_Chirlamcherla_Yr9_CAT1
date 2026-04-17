@@ -230,7 +230,7 @@ def validate_inputs(*args):
         message = "Formula must contain the variable 'x'." 
     elif not formula_is_complete(formula): # thsi makes sure that the formula does not end in some operators 
         message = "Formula is incomplete — finish the expression."
-    elif method.lower() not in ["left", "right", "midpoint"]: # only accepts these inputs
+    elif method.lower() not in ["left","l","right","r","midpoint","mid"]: # only accepts these inputs
         message = "Method must be one of: left, right, midpoint."
 
     if message == "": # if the message is empty, then there are no errors, and the button allows you to go to page 2
@@ -317,7 +317,7 @@ def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this
         ) #it then lists everything out inthe output of teh thingy. 
 
     final_area = np.sum(np.abs(heights * width)) # this calculates the total area by summing up the absolute values of the individual areas.
-    print(f'Total absolute area estimate: {final_area}') # it finally prints the positive total area out.
+    print(f'Total absolute area estimate: {final_area:.4f}') # it finally prints the positive total area out.
 
     x = np.linspace(lower_bound, upper_bound, 400) # it basically makes the borders of the graph the lower and upper bounds, and it makes 400 points in between to make a smooth graph of the function.
     y = f(x) # the y axis is the function values at the x values.
