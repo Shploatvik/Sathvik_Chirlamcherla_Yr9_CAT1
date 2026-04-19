@@ -190,23 +190,6 @@ def is_int(s):
     except:
         return False # this is to detect if a number is an integer or not - uses try to detect and return false or true
 
-def valid_input(lower, upper, rect, formula, method):
-    if not is_float(lower):
-        return False # if its not a flowat it returns false
-    if not is_float(upper):
-        return False # if it is not a float it also returns false
-    if float(upper) <= float(lower):
-        return False # if the upper bound is less than or equal to the lower bound, then it is said to be false
-    if not is_int(rect):
-        return False # if the amount of rectangles are not an integer then it is false
-    if int(rect) <= 0:
-        return False # if the number of rectangles is not positive, its false
-    if "x" not in formula:
-        return False # if the formula doesn't contain x then it is false
-    if method.lower() not in ["left", "l", "right", 'r',"midpoint",'m']:
-        return False # if teh method id not one of these options then it is false
-    return True
-
 def validate_inputs(*args):
     global button_enabled
 
