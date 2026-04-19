@@ -230,8 +230,8 @@ def validate_inputs(*args):
         message = "Formula must contain the variable 'x'." 
     elif not formula_is_complete(formula): # thsi makes sure that the formula does not end in some operators 
         message = "Formula is incomplete — finish the expression."
-    elif method.lower() not in ["left","l","right","r","midpoint","mid"]: # only accepts these inputs
-        message = "Method must be one of: left, right, midpoint."
+    elif method.lower() not in ["left","l","right","r","midpoint","m"]: # only accepts these inputs
+        message = "Method must be one of: left,l,right,r,midpoint,m"
 
     if message == "": # if the message is empty, then there are no errors, and the button allows you to go to page 2
         button_enabled = True
@@ -247,7 +247,7 @@ def validate_inputs(*args):
 
 # this builds safe functions from the formula inoput
 def get_function(formula):
-    formula = autocorrect_formula(formula)   ### >>> ADDED
+    formula = autocorrect_formula(formula)  
     allowed = {
         "sin": np.sin,
         "cos": np.cos,
@@ -284,12 +284,12 @@ graph_ax = page1.inset_axes([0.5, 0.05, 0.3, 0.1]) # makes the axes of teh butto
 graph = Button(graph_ax, 'Draw Graph') #the text on teh button
 graph.on_clicked(show_page2) # this sets what will happen when the button is clicked - show page 2
 
-error_ax = page1.inset_axes([0.2, 0.05, 0.5, 0.1])
+error_ax = page1.inset_axes([0.1, 0.05, 0.5, 0.1])
 error_ax.set_xticks([])
 error_ax.set_yticks([])
 error_ax.set_frame_on(False) # this is the text box for error messages on page 1 - it just sets up the axes and stuff
 
-error_text = error_ax.text(0.02, 0.5, "", fontsize=12, color="red", va="center") # this sets the font colour, alignment, size and position.
+error_text = error_ax.text(0, 0.5, "", fontsize=12, color="red", va="center") # this sets the font colour, alignment, size and position.
 
 # PAGE 2 GRAPHING
 def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this sets up the page 2 based on the inputs. 
@@ -303,7 +303,7 @@ def page2_setup(lower_bound, upper_bound, rectangles, formula, method, f): #this
         sample_x = left_edges
     elif method == "right" or method == 'r': # if teh method is right, it uses the right edge of hte rectangle to calculate the height - left + width
         sample_x = left_edges + width
-    elif method == "midpoint" or method == 'mid': # if the method is midpoint, it uses the middle of the rectangle to caluclate the height which is left +1/2width
+    elif method == "midpoint" or method == 'm': # if the method is midpoint, it uses the middle of the rectangle to caluclate the height which is left +1/2width
         sample_x = left_edges + width / 2
 
     heights = f(sample_x) # this calculates the heights of the rectangles by plugging in the sample x values into the function f, which is the formula that the user inputted.
